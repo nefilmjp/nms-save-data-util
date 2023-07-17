@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Microsoft.VisualBasic.FileIO;
 
 namespace NMSSaveDataUtil
 {
@@ -265,7 +266,8 @@ namespace NMSSaveDataUtil
             // Delete
             if (dgv.Columns[e.ColumnIndex].Name == "backupDeleteColumn")
             {
-                File.Delete(filepath);
+                // File.Delete(filepath);
+                FileSystem.DeleteFile(filepath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
             }
         }
     }
