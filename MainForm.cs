@@ -54,13 +54,13 @@ namespace NMSSaveDataUtil
             if (settings.SaveFolder == "") return;
             if (lockButton.Checked)
             {
-                lockButton.Text = "Unlock Save Data";
+                lockButton.Text = "Unlock Save Files";
                 lockButton.Image = Properties.Resources.Unlock;
                 LockSaveFiles.Start(settings.SaveFolder);
             }
             else
             {
-                lockButton.Text = "Lock Save Data";
+                lockButton.Text = "Lock Save Files";
                 lockButton.Image = Properties.Resources.Lock;
                 LockSaveFiles.Stop(settings.SaveFolder);
             }
@@ -243,12 +243,21 @@ namespace NMSSaveDataUtil
 
         private void SaveDataGridView_Paint(object sender, PaintEventArgs e)
         {
-            splitContainer.SplitterDistance = saveDataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.Displayed) + 3;
+            Debug.WriteLine("SaveDataGridView_Paint");
+
+            if (saveDataGridView.ColumnHeadersHeight + saveDataGridView.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + 2 > splitContainer.Height)
+            {
+                splitContainer.SplitterDistance = saveDataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 3 + 18;
+            }
+            else
+            {
+                splitContainer.SplitterDistance = saveDataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 3;
+            }
         }
 
         private void BackupDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (settings.SaveFolder == "" || settings.BackupFolder == "") { return;  }
+            if (settings.SaveFolder == "" || settings.BackupFolder == "") { return; }
 
             if (e.RowIndex < 0) { return; }
 

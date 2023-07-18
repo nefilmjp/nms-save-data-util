@@ -36,6 +36,7 @@
             saveSelectColumn = new DataGridViewCheckBoxColumn();
             saveFilenameColumn = new DataGridViewTextBoxColumn();
             saveDateColumn = new DataGridViewTextBoxColumn();
+            saveLockColumn = new DataGridViewButtonColumn();
             backupDataGridView = new DataGridView();
             backupSelectColumn = new DataGridViewCheckBoxColumn();
             backupFilenameColumn = new DataGridViewTextBoxColumn();
@@ -151,7 +152,7 @@
             // 
             splitContainer.Panel2.Controls.Add(backupDataGridView);
             splitContainer.Size = new Size(610, 382);
-            splitContainer.SplitterDistance = 250;
+            splitContainer.SplitterDistance = 300;
             splitContainer.TabIndex = 0;
             // 
             // saveDataGridView
@@ -160,14 +161,14 @@
             saveDataGridView.AllowUserToDeleteRows = false;
             saveDataGridView.AllowUserToResizeRows = false;
             saveDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            saveDataGridView.Columns.AddRange(new DataGridViewColumn[] { saveSelectColumn, saveFilenameColumn, saveDateColumn });
+            saveDataGridView.Columns.AddRange(new DataGridViewColumn[] { saveSelectColumn, saveFilenameColumn, saveDateColumn, saveLockColumn });
             saveDataGridView.Dock = DockStyle.Fill;
             saveDataGridView.Location = new Point(0, 0);
             saveDataGridView.Name = "saveDataGridView";
             saveDataGridView.RowHeadersVisible = false;
             saveDataGridView.RowTemplate.Height = 25;
             saveDataGridView.ShowCellToolTips = false;
-            saveDataGridView.Size = new Size(250, 382);
+            saveDataGridView.Size = new Size(300, 382);
             saveDataGridView.TabIndex = 0;
             saveDataGridView.Paint += SaveDataGridView_Paint;
             // 
@@ -196,6 +197,13 @@
             saveDateColumn.ReadOnly = true;
             saveDateColumn.Width = 58;
             // 
+            // saveLockColumn
+            // 
+            saveLockColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            saveLockColumn.HeaderText = "";
+            saveLockColumn.Name = "saveLockColumn";
+            saveLockColumn.Visible = false;
+            // 
             // backupDataGridView
             // 
             backupDataGridView.AllowUserToAddRows = false;
@@ -209,7 +217,7 @@
             backupDataGridView.RowHeadersVisible = false;
             backupDataGridView.RowTemplate.Height = 25;
             backupDataGridView.ShowCellToolTips = false;
-            backupDataGridView.Size = new Size(356, 382);
+            backupDataGridView.Size = new Size(306, 382);
             backupDataGridView.TabIndex = 0;
             backupDataGridView.CellContentClick += BackupDataGridView_CellContentClick;
             backupDataGridView.CellPainting += BackupDataGridView_CellPainting;
@@ -520,7 +528,7 @@
             toolStrip.Items.AddRange(new ToolStripItem[] { lockButton, backupButton });
             toolStrip.Location = new Point(3, 0);
             toolStrip.Name = "toolStrip";
-            toolStrip.Size = new Size(244, 25);
+            toolStrip.Size = new Size(259, 25);
             toolStrip.TabIndex = 0;
             // 
             // lockButton
@@ -529,8 +537,8 @@
             lockButton.Image = Properties.Resources.Lock;
             lockButton.ImageTransparentColor = Color.Magenta;
             lockButton.Name = "lockButton";
-            lockButton.Size = new Size(114, 22);
-            lockButton.Text = "Lock Save Data";
+            lockButton.Size = new Size(115, 22);
+            lockButton.Text = "Lock Save Files";
             lockButton.ToolTipText = "Lock/unlock save data files";
             lockButton.CheckedChanged += LockButton_CheckedChanged;
             // 
@@ -539,8 +547,8 @@
             backupButton.Image = Properties.Resources.ExportData;
             backupButton.ImageTransparentColor = Color.Magenta;
             backupButton.Name = "backupButton";
-            backupButton.Size = new Size(127, 22);
-            backupButton.Text = "Backup Save Data";
+            backupButton.Size = new Size(110, 22);
+            backupButton.Text = "Create Backup";
             backupButton.ToolTipText = "Backup save data";
             backupButton.Click += BackupButton_Click;
             // 
@@ -629,9 +637,6 @@
         private SplitContainer splitContainer;
         private DataGridView saveDataGridView;
         private DataGridView backupDataGridView;
-        private DataGridViewCheckBoxColumn saveSelectColumn;
-        private DataGridViewTextBoxColumn saveFilenameColumn;
-        private DataGridViewTextBoxColumn saveDateColumn;
         private DataGridViewCheckBoxColumn backupSelectColumn;
         private DataGridViewTextBoxColumn backupFilenameColumn;
         private DataGridViewTextBoxColumn backupDateColumn;
@@ -641,5 +646,9 @@
         private CheckBox enableCameraCheckBox;
         private FileSystemWatcher saveFileSystemWatcher;
         private FileSystemWatcher backupFileSystemWatcher;
+        private DataGridViewCheckBoxColumn saveSelectColumn;
+        private DataGridViewTextBoxColumn saveFilenameColumn;
+        private DataGridViewTextBoxColumn saveDateColumn;
+        private DataGridViewButtonColumn saveLockColumn;
     }
 }
