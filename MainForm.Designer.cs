@@ -83,6 +83,7 @@
             lockToolStripMenuItem = new ToolStripMenuItem();
             saveFileSystemWatcher = new FileSystemWatcher();
             backupFileSystemWatcher = new FileSystemWatcher();
+            label6 = new Label();
             toolStripContainer.ContentPanel.SuspendLayout();
             toolStripContainer.TopToolStripPanel.SuspendLayout();
             toolStripContainer.SuspendLayout();
@@ -388,6 +389,7 @@
             // 
             // cameraTabPage
             // 
+            cameraTabPage.Controls.Add(label6);
             cameraTabPage.Controls.Add(moveCameraButton);
             cameraTabPage.Controls.Add(cameraMoveSpeedLabel);
             cameraTabPage.Controls.Add(cameraMoveSpeedNumericUpDown);
@@ -411,7 +413,7 @@
             // 
             // moveCameraButton
             // 
-            moveCameraButton.Location = new Point(102, 140);
+            moveCameraButton.Location = new Point(102, 181);
             moveCameraButton.Name = "moveCameraButton";
             moveCameraButton.Size = new Size(120, 46);
             moveCameraButton.TabIndex = 14;
@@ -422,7 +424,7 @@
             // cameraMoveSpeedLabel
             // 
             cameraMoveSpeedLabel.AutoSize = true;
-            cameraMoveSpeedLabel.Location = new Point(23, 17);
+            cameraMoveSpeedLabel.Location = new Point(23, 58);
             cameraMoveSpeedLabel.Name = "cameraMoveSpeedLabel";
             cameraMoveSpeedLabel.Size = new Size(73, 15);
             cameraMoveSpeedLabel.TabIndex = 0;
@@ -430,7 +432,7 @@
             // 
             // cameraMoveSpeedNumericUpDown
             // 
-            cameraMoveSpeedNumericUpDown.Location = new Point(102, 15);
+            cameraMoveSpeedNumericUpDown.Location = new Point(102, 56);
             cameraMoveSpeedNumericUpDown.Maximum = new decimal(new int[] { 32767, 0, 0, 0 });
             cameraMoveSpeedNumericUpDown.Minimum = new decimal(new int[] { 32767, 0, 0, int.MinValue });
             cameraMoveSpeedNumericUpDown.Name = "cameraMoveSpeedNumericUpDown";
@@ -443,7 +445,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(228, 17);
+            label1.Location = new Point(228, 58);
             label1.Name = "label1";
             label1.Size = new Size(112, 15);
             label1.TabIndex = 10;
@@ -452,7 +454,7 @@
             // cameraRotateDelayLabel
             // 
             cameraRotateDelayLabel.AutoSize = true;
-            cameraRotateDelayLabel.Location = new Point(19, 46);
+            cameraRotateDelayLabel.Location = new Point(19, 87);
             cameraRotateDelayLabel.Name = "cameraRotateDelayLabel";
             cameraRotateDelayLabel.Size = new Size(77, 15);
             cameraRotateDelayLabel.TabIndex = 8;
@@ -460,7 +462,7 @@
             // 
             // cameraRotateDelayNumericUpDown
             // 
-            cameraRotateDelayNumericUpDown.Location = new Point(102, 44);
+            cameraRotateDelayNumericUpDown.Location = new Point(102, 85);
             cameraRotateDelayNumericUpDown.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             cameraRotateDelayNumericUpDown.Name = "cameraRotateDelayNumericUpDown";
             cameraRotateDelayNumericUpDown.Size = new Size(120, 23);
@@ -471,7 +473,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(228, 46);
+            label2.Location = new Point(228, 87);
             label2.Name = "label2";
             label2.Size = new Size(31, 15);
             label2.TabIndex = 11;
@@ -480,7 +482,7 @@
             // cameraRotateSpeedLabel
             // 
             cameraRotateSpeedLabel.AutoSize = true;
-            cameraRotateSpeedLabel.Location = new Point(15, 75);
+            cameraRotateSpeedLabel.Location = new Point(15, 116);
             cameraRotateSpeedLabel.Name = "cameraRotateSpeedLabel";
             cameraRotateSpeedLabel.Size = new Size(81, 15);
             cameraRotateSpeedLabel.TabIndex = 3;
@@ -488,7 +490,7 @@
             // 
             // cameraRotateSpeedNumericUpDown
             // 
-            cameraRotateSpeedNumericUpDown.Location = new Point(102, 73);
+            cameraRotateSpeedNumericUpDown.Location = new Point(102, 114);
             cameraRotateSpeedNumericUpDown.Maximum = new decimal(new int[] { 32767, 0, 0, 0 });
             cameraRotateSpeedNumericUpDown.Minimum = new decimal(new int[] { 32767, 0, 0, int.MinValue });
             cameraRotateSpeedNumericUpDown.Name = "cameraRotateSpeedNumericUpDown";
@@ -500,7 +502,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(228, 75);
+            label3.Location = new Point(228, 116);
             label3.Name = "label3";
             label3.Size = new Size(112, 15);
             label3.TabIndex = 12;
@@ -509,7 +511,7 @@
             // cameraDurationLabel
             // 
             cameraDurationLabel.AutoSize = true;
-            cameraDurationLabel.Location = new Point(41, 104);
+            cameraDurationLabel.Location = new Point(41, 145);
             cameraDurationLabel.Name = "cameraDurationLabel";
             cameraDurationLabel.Size = new Size(55, 15);
             cameraDurationLabel.TabIndex = 6;
@@ -517,7 +519,7 @@
             // 
             // cameraDurationNumericUpDown
             // 
-            cameraDurationNumericUpDown.Location = new Point(102, 102);
+            cameraDurationNumericUpDown.Location = new Point(102, 143);
             cameraDurationNumericUpDown.Maximum = new decimal(new int[] { 16777216, 0, 0, 0 });
             cameraDurationNumericUpDown.Name = "cameraDurationNumericUpDown";
             cameraDurationNumericUpDown.Size = new Size(120, 23);
@@ -528,7 +530,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(228, 104);
+            label4.Location = new Point(228, 145);
             label4.Name = "label4";
             label4.Size = new Size(31, 15);
             label4.TabIndex = 13;
@@ -595,7 +597,7 @@
             toolStrip.Items.AddRange(new ToolStripItem[] { lockButton, backupButton });
             toolStrip.Location = new Point(3, 0);
             toolStrip.Name = "toolStrip";
-            toolStrip.Size = new Size(196, 25);
+            toolStrip.Size = new Size(165, 25);
             toolStrip.TabIndex = 0;
             // 
             // lockButton
@@ -659,6 +661,16 @@
             backupFileSystemWatcher.EnableRaisingEvents = true;
             backupFileSystemWatcher.Filter = "*.7z";
             backupFileSystemWatcher.SynchronizingObject = this;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Dock = DockStyle.Top;
+            label6.Location = new Point(12, 12);
+            label6.Name = "label6";
+            label6.Size = new Size(461, 30);
+            label6.TabIndex = 15;
+            label6.Text = "Move the camera in a circular motion in photo mode using the virtual controller.\nRequires installing ViGEmBus.";
             // 
             // MainForm
             // 
@@ -760,5 +772,6 @@
         private DataGridViewButtonColumn saveModeColumn;
         private DataGridViewTextBoxColumn saveFilenameColumn;
         private DataGridViewTextBoxColumn saveDateColumn;
+        private Label label6;
     }
 }
