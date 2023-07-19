@@ -14,6 +14,7 @@ namespace NMSSaveDataUtil.Classes
         private int _cameraRotateDelay;
         private short _cameraRotateSpeed;
         private int _cameraDuration;
+        private bool _enablePortal;
         private List<string> _saveFiles;
         private Point _winLocation;
         private Size _winSize;
@@ -26,6 +27,7 @@ namespace NMSSaveDataUtil.Classes
             _cameraRotateDelay = 400;
             _cameraRotateSpeed = -22000;
             _cameraDuration = 21000;
+            _enablePortal = false;
             _saveFiles = new List<string>() { "accountdata.hg", "save.hg", "save2.hg" };
             _winLocation = new Point(0, 0);
             _winSize = new Size(0, 0);
@@ -123,6 +125,15 @@ namespace NMSSaveDataUtil.Classes
             {
                 _cameraDuration = value;
                 OnPropertyChanged("CameraDuration");
+            }
+        }
+        public bool EnablePortal
+        {
+            get { return _enablePortal; }
+            set
+            {
+                _enablePortal = value;
+                OnPropertyChanged("EnablePortal");
             }
         }
         public string[] SaveFiles

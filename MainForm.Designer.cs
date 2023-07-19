@@ -68,6 +68,11 @@
             cameraDurationLabel = new Label();
             cameraDurationNumericUpDown = new NumericUpDown();
             label4 = new Label();
+            portalTabPage = new TabPage();
+            portalGlyphsLabel = new Label();
+            label5 = new Label();
+            sendPortalAddressButton = new Button();
+            portalAddressTextBox = new TextBox();
             toolStrip = new ToolStrip();
             lockButton = new ToolStripButton();
             backupButton = new ToolStripButton();
@@ -90,6 +95,7 @@
             ((System.ComponentModel.ISupportInitialize)cameraRotateDelayNumericUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cameraRotateSpeedNumericUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cameraDurationNumericUpDown).BeginInit();
+            portalTabPage.SuspendLayout();
             toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)saveFileSystemWatcher).BeginInit();
             ((System.ComponentModel.ISupportInitialize)backupFileSystemWatcher).BeginInit();
@@ -118,6 +124,7 @@
             tabControl.Controls.Add(backupTabPage);
             tabControl.Controls.Add(settingsTabPage);
             tabControl.Controls.Add(cameraTabPage);
+            tabControl.Controls.Add(portalTabPage);
             tabControl.Dock = DockStyle.Fill;
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
@@ -152,7 +159,7 @@
             // 
             splitContainer.Panel2.Controls.Add(backupDataGridView);
             splitContainer.Size = new Size(610, 382);
-            splitContainer.SplitterDistance = 300;
+            splitContainer.SplitterDistance = 250;
             splitContainer.TabIndex = 0;
             // 
             // saveDataGridView
@@ -168,7 +175,7 @@
             saveDataGridView.RowHeadersVisible = false;
             saveDataGridView.RowTemplate.Height = 25;
             saveDataGridView.ShowCellToolTips = false;
-            saveDataGridView.Size = new Size(300, 382);
+            saveDataGridView.Size = new Size(250, 382);
             saveDataGridView.TabIndex = 0;
             saveDataGridView.Paint += SaveDataGridView_Paint;
             // 
@@ -217,7 +224,7 @@
             backupDataGridView.RowHeadersVisible = false;
             backupDataGridView.RowTemplate.Height = 25;
             backupDataGridView.ShowCellToolTips = false;
-            backupDataGridView.Size = new Size(306, 382);
+            backupDataGridView.Size = new Size(356, 382);
             backupDataGridView.TabIndex = 0;
             backupDataGridView.CellContentClick += BackupDataGridView_CellContentClick;
             backupDataGridView.CellPainting += BackupDataGridView_CellPainting;
@@ -521,6 +528,60 @@
             label4.TabIndex = 13;
             label4.Text = "(ms)";
             // 
+            // portalTabPage
+            // 
+            portalTabPage.Controls.Add(portalGlyphsLabel);
+            portalTabPage.Controls.Add(label5);
+            portalTabPage.Controls.Add(sendPortalAddressButton);
+            portalTabPage.Controls.Add(portalAddressTextBox);
+            portalTabPage.Location = new Point(4, 24);
+            portalTabPage.Name = "portalTabPage";
+            portalTabPage.Padding = new Padding(12);
+            portalTabPage.Size = new Size(616, 388);
+            portalTabPage.TabIndex = 3;
+            portalTabPage.Text = "Portal";
+            portalTabPage.UseVisualStyleBackColor = true;
+            // 
+            // portalGlyphsLabel
+            // 
+            portalGlyphsLabel.AutoSize = true;
+            portalGlyphsLabel.Location = new Point(15, 65);
+            portalGlyphsLabel.Margin = new Padding(3, 9, 3, 0);
+            portalGlyphsLabel.Name = "portalGlyphsLabel";
+            portalGlyphsLabel.Size = new Size(0, 15);
+            portalGlyphsLabel.TabIndex = 3;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(15, 12);
+            label5.Name = "label5";
+            label5.Size = new Size(170, 15);
+            label5.TabIndex = 2;
+            label5.Text = "Portal Address (12-digit Hex)";
+            // 
+            // sendPortalAddressButton
+            // 
+            sendPortalAddressButton.Enabled = false;
+            sendPortalAddressButton.Location = new Point(181, 30);
+            sendPortalAddressButton.Name = "sendPortalAddressButton";
+            sendPortalAddressButton.Size = new Size(75, 23);
+            sendPortalAddressButton.TabIndex = 1;
+            sendPortalAddressButton.Text = "Send";
+            sendPortalAddressButton.UseVisualStyleBackColor = true;
+            sendPortalAddressButton.Click += SendPortalAddressButton_Click;
+            // 
+            // portalAddressTextBox
+            // 
+            portalAddressTextBox.CharacterCasing = CharacterCasing.Upper;
+            portalAddressTextBox.ImeMode = ImeMode.Alpha;
+            portalAddressTextBox.Location = new Point(15, 30);
+            portalAddressTextBox.MaxLength = 12;
+            portalAddressTextBox.Name = "portalAddressTextBox";
+            portalAddressTextBox.Size = new Size(160, 23);
+            portalAddressTextBox.TabIndex = 0;
+            portalAddressTextBox.TextChanged += PortalAddressTextBox_TextChanged;
+            // 
             // toolStrip
             // 
             toolStrip.Dock = DockStyle.None;
@@ -528,7 +589,7 @@
             toolStrip.Items.AddRange(new ToolStripItem[] { lockButton, backupButton });
             toolStrip.Location = new Point(3, 0);
             toolStrip.Name = "toolStrip";
-            toolStrip.Size = new Size(259, 25);
+            toolStrip.Size = new Size(228, 25);
             toolStrip.TabIndex = 0;
             // 
             // lockButton
@@ -595,6 +656,8 @@
             ((System.ComponentModel.ISupportInitialize)cameraRotateDelayNumericUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)cameraRotateSpeedNumericUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)cameraDurationNumericUpDown).EndInit();
+            portalTabPage.ResumeLayout(false);
+            portalTabPage.PerformLayout();
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)saveFileSystemWatcher).EndInit();
@@ -650,5 +713,10 @@
         private DataGridViewTextBoxColumn saveFilenameColumn;
         private DataGridViewTextBoxColumn saveDateColumn;
         private DataGridViewButtonColumn saveLockColumn;
+        private TabPage portalTabPage;
+        private Label label5;
+        private Button sendPortalAddressButton;
+        private TextBox portalAddressTextBox;
+        private Label portalGlyphsLabel;
     }
 }

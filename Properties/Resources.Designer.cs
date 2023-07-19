@@ -121,6 +121,16 @@ namespace NMSSaveDataUtil.Properties {
         }
         
         /// <summary>
+        ///   型 System.Byte[] のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static byte[] NMS_Glyphs_Mono_fix {
+            get {
+                object obj = ResourceManager.GetObject("NMS_Glyphs_Mono_fix", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
         internal static System.Drawing.Bitmap RestoreDefaultView {

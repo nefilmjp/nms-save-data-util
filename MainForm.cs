@@ -4,6 +4,9 @@ using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 using Microsoft.VisualBasic.FileIO;
+using System.Text.RegularExpressions;
+using System.Drawing.Text;
+using System.Runtime.InteropServices;
 
 namespace NMSSaveDataUtil
 {
@@ -11,6 +14,7 @@ namespace NMSSaveDataUtil
     {
         private Settings settings = Settings.Load();
         private readonly MoveCamera? camera;
+        private readonly Portal? portal;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -27,6 +31,11 @@ namespace NMSSaveDataUtil
         {
             InitializeComponent();
 
+            PrivateFontCollection pfc = new();
+            LocalFont.AddFontFromResource(pfc, Properties.Resources.NMS_Glyphs_Mono_fix);
+            Font glyphFont = new(pfc.Families[0], 32);
+            portalGlyphsLabel.Font = glyphFont;
+
             saveFolderTextBox.DataBindings.Add(new Binding("Text", settings, "SaveFolder", true));
             backupFolderTextBox.DataBindings.Add(new Binding("Text", settings, "BackupFolder", true));
 
@@ -39,6 +48,8 @@ namespace NMSSaveDataUtil
             cameraRotateSpeedNumericUpDown.DataBindings.Add(new Binding("Value", settings, "CameraRotateSpeed", true));
             cameraDurationNumericUpDown.DataBindings.Add(new Binding("Value", settings, "CameraDuration", true));
 
+            // enablePortalCheckBox.DataBindings.Add(new Binding("Checked", settings, "EnablePortal", true));
+
             if (settings.EnableCamera)
             {
                 camera = new MoveCamera();
@@ -46,6 +57,15 @@ namespace NMSSaveDataUtil
             else
             {
                 tabControl.TabPages.Remove(cameraTabPage);
+            }
+
+            if (settings.EnablePortal)
+            {
+                portal = new Portal();
+            }
+            else
+            {
+                tabControl.TabPages.Remove(portalTabPage);
             }
         }
 
@@ -277,6 +297,27 @@ namespace NMSSaveDataUtil
             {
                 // File.Delete(filepath);
                 FileSystem.DeleteFile(filepath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            }
+        }
+
+        private void SendPortalAddressButton_Click(object sender, EventArgs e)
+        {
+            string address = portalAddressTextBox.Text;
+            portal?.SendAddress(address);
+        }
+
+        private void PortalAddressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            string address = portalAddressTextBox.Text;
+
+            portalGlyphsLabel.Text = address;
+            if (address.Length == 12 && Regex.IsMatch(address, "[0-9A-F]{12}"))
+            {
+                sendPortalAddressButton.Enabled = true;
+            }
+            else
+            {
+                sendPortalAddressButton.Enabled = false;
             }
         }
     }
