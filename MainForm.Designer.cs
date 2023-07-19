@@ -56,6 +56,7 @@
             saveFolderButton = new Button();
             saveFolderLabel = new Label();
             cameraTabPage = new TabPage();
+            label6 = new Label();
             moveCameraButton = new Button();
             cameraMoveSpeedLabel = new Label();
             cameraMoveSpeedNumericUpDown = new NumericUpDown();
@@ -83,7 +84,6 @@
             lockToolStripMenuItem = new ToolStripMenuItem();
             saveFileSystemWatcher = new FileSystemWatcher();
             backupFileSystemWatcher = new FileSystemWatcher();
-            label6 = new Label();
             toolStripContainer.ContentPanel.SuspendLayout();
             toolStripContainer.TopToolStripPanel.SuspendLayout();
             toolStripContainer.SuspendLayout();
@@ -383,9 +383,9 @@
             saveFolderLabel.AutoSize = true;
             saveFolderLabel.Location = new Point(15, 12);
             saveFolderLabel.Name = "saveFolderLabel";
-            saveFolderLabel.Size = new Size(70, 15);
+            saveFolderLabel.Size = new Size(184, 15);
             saveFolderLabel.TabIndex = 0;
-            saveFolderLabel.Text = "Save folder";
+            saveFolderLabel.Text = "Save folder (contains *.hg files)";
             // 
             // cameraTabPage
             // 
@@ -410,6 +410,16 @@
             cameraTabPage.TabIndex = 1;
             cameraTabPage.Text = "Camera";
             cameraTabPage.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Dock = DockStyle.Top;
+            label6.Location = new Point(12, 12);
+            label6.Name = "label6";
+            label6.Size = new Size(461, 30);
+            label6.TabIndex = 15;
+            label6.Text = "Move the camera in a circular motion in photo mode using the virtual controller.\nRequires installing ViGEmBus.";
             // 
             // moveCameraButton
             // 
@@ -661,16 +671,6 @@
             backupFileSystemWatcher.EnableRaisingEvents = true;
             backupFileSystemWatcher.Filter = "*.7z";
             backupFileSystemWatcher.SynchronizingObject = this;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Dock = DockStyle.Top;
-            label6.Location = new Point(12, 12);
-            label6.Name = "label6";
-            label6.Size = new Size(461, 30);
-            label6.TabIndex = 15;
-            label6.Text = "Move the camera in a circular motion in photo mode using the virtual controller.\nRequires installing ViGEmBus.";
             // 
             // MainForm
             // 
