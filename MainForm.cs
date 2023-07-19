@@ -234,7 +234,7 @@ namespace NMSSaveDataUtil
             if (e.RowIndex < 0)
                 return;
 
-            if (e.ColumnIndex == 4)
+            if (e.ColumnIndex == 1)
             {
                 e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
@@ -247,7 +247,7 @@ namespace NMSSaveDataUtil
                 e.Handled = true;
             }
 
-            if (e.ColumnIndex == 5)
+            if (e.ColumnIndex == 7)
             {
                 e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
@@ -283,7 +283,7 @@ namespace NMSSaveDataUtil
 
             DataGridView dgv = (DataGridView)sender;
 
-            string filename = dgv.Rows[e.RowIndex].Cells[1].Value.ToString()!;
+            string filename = dgv.Rows[e.RowIndex].Cells["backupFilenameColumn"].Value.ToString()!;
             string filepath = @$"{settings.BackupFolder}\{filename}";
 
             // Restore
@@ -298,6 +298,31 @@ namespace NMSSaveDataUtil
                 // File.Delete(filepath);
                 FileSystem.DeleteFile(filepath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
             }
+        }
+
+        private void BackupDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) { return; }
+
+            DataGridView dgv = (DataGridView)sender;
+
+            string oldFilename = dgv.Rows[e.RowIndex].Cells["backupFilenameColumn"].Value.ToString()!;
+            string date = dgv.Rows[e.RowIndex].Cells["backupSavedDateColumn"].Value.ToString()!;
+            string included = dgv.Rows[e.RowIndex].Cells["backupIncludedFilesColumn"].Value.ToString()!;
+            string notes = dgv.Rows[e.RowIndex].Cells["backupNotesColumn"].Value is null
+                ? ""
+                : dgv.Rows[e.RowIndex].Cells["backupNotesColumn"].Value.ToString()!;
+
+            char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            string invalidCharsString = new(invalidChars);
+            string removePattern = string.Format("[{0}]", Regex.Escape(invalidCharsString));
+
+            string validNotes = Regex.Replace(notes, removePattern, "");
+            dgv.Rows[e.RowIndex].Cells["backupNotesColumn"].Value = validNotes;
+
+            string newFilename = notes == "" ? $"{date}_{included}.7z" : $"{date}_{included}_{validNotes}.7z";
+
+            File.Move(@$"{settings.BackupFolder}\{oldFilename}", @$"{settings.BackupFolder}\{newFilename}");
         }
 
         private void SendPortalAddressButton_Click(object sender, EventArgs e)

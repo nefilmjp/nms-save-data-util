@@ -68,6 +68,7 @@ namespace NMSSaveDataUtil.Classes
                 }
             }
             grid.Sort(grid.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
+            grid.CurrentCell = null;
         }
 
         public static string GetSaveIncludes(DataGridView grid)
@@ -116,7 +117,7 @@ namespace NMSSaveDataUtil.Classes
         public static bool IsBackup(string path)
         {
             // yyyyMMddHHmmss_a,1,2,3,4,5,6.7z
-            if (Regex.IsMatch(Path.GetFileName(path), @"^[0-9]{14}_(a|[0-9]+)(,[0-9]+){0,}\.7z$")) return true;
+            if (Regex.IsMatch(Path.GetFileName(path), @"^[0-9]{14}_(a|[0-9]+)(,[0-9]+){0,}_?(.+)?\.7z$")) return true;
             return false;
         }
 
@@ -138,14 +139,21 @@ namespace NMSSaveDataUtil.Classes
             foreach ((string file, int idx) in files.Select((x, i) => (x, i)))
             {
                 string filename = Path.GetFileName(file);
-                Match res = Regex.Match(filename, @"^[0-9]{14}_((a|[0-9]+)(,[0-9]+){0,})\.7z$");
+                Match res = Regex.Match(filename, @"^([0-9]{14})_((a|[0-9]+)(,[0-9]+){0,})_?(.+)?\.7z$");
+
+                string included = res.Groups[2].Value;
+                string savedDate = res.Groups[1].Value;
+                string notes = res.Groups[5].Value;
 
                 grid.Rows.Add();
-                grid.Rows[idx].Cells[1].Value = filename;
-                grid.Rows[idx].Cells[2].Value = File.GetLastWriteTime(file);
-                grid.Rows[idx].Cells[3].Value = res.Groups[1].Value;
+                grid.Rows[idx].Cells["backupFilenameColumn"].Value = filename;
+                grid.Rows[idx].Cells["backupDateColumn"].Value = DateTime.ParseExact(savedDate, "yyyyMMddHHmmss", null);
+                grid.Rows[idx].Cells["backupIncludedFilesColumn"].Value = included;
+                grid.Rows[idx].Cells["backupSavedDateColumn"].Value = savedDate;
+                grid.Rows[idx].Cells["backupNotesColumn"].Value = notes;
             }
             grid.Sort(grid.Columns[2], System.ComponentModel.ListSortDirection.Descending);
+            grid.CurrentCell = null;
         }
 
         #endregion

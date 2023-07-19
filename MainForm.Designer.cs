@@ -38,12 +38,6 @@
             saveDateColumn = new DataGridViewTextBoxColumn();
             saveLockColumn = new DataGridViewButtonColumn();
             backupDataGridView = new DataGridView();
-            backupSelectColumn = new DataGridViewCheckBoxColumn();
-            backupFilenameColumn = new DataGridViewTextBoxColumn();
-            backupDateColumn = new DataGridViewTextBoxColumn();
-            backupIncludedFilesColumn = new DataGridViewTextBoxColumn();
-            backupRestoreColumn = new DataGridViewButtonColumn();
-            backupDeleteColumn = new DataGridViewButtonColumn();
             settingsTabPage = new TabPage();
             enableCameraCheckBox = new CheckBox();
             disableAutosaveCheckBox = new CheckBox();
@@ -78,6 +72,14 @@
             backupButton = new ToolStripButton();
             saveFileSystemWatcher = new FileSystemWatcher();
             backupFileSystemWatcher = new FileSystemWatcher();
+            backupSelectColumn = new DataGridViewCheckBoxColumn();
+            backupRestoreColumn = new DataGridViewButtonColumn();
+            backupFilenameColumn = new DataGridViewTextBoxColumn();
+            backupDateColumn = new DataGridViewTextBoxColumn();
+            backupIncludedFilesColumn = new DataGridViewTextBoxColumn();
+            backupSavedDateColumn = new DataGridViewTextBoxColumn();
+            backupNotesColumn = new DataGridViewTextBoxColumn();
+            backupDeleteColumn = new DataGridViewButtonColumn();
             toolStripContainer.ContentPanel.SuspendLayout();
             toolStripContainer.TopToolStripPanel.SuspendLayout();
             toolStripContainer.SuspendLayout();
@@ -107,11 +109,11 @@
             // toolStripContainer.ContentPanel
             // 
             toolStripContainer.ContentPanel.Controls.Add(tabControl);
-            toolStripContainer.ContentPanel.Size = new Size(624, 416);
+            toolStripContainer.ContentPanel.Size = new Size(704, 416);
             toolStripContainer.Dock = DockStyle.Fill;
             toolStripContainer.Location = new Point(0, 0);
             toolStripContainer.Name = "toolStripContainer";
-            toolStripContainer.Size = new Size(624, 441);
+            toolStripContainer.Size = new Size(704, 441);
             toolStripContainer.TabIndex = 0;
             toolStripContainer.Text = "toolStripContainer1";
             // 
@@ -129,7 +131,7 @@
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(624, 416);
+            tabControl.Size = new Size(704, 416);
             tabControl.TabIndex = 0;
             // 
             // backupTabPage
@@ -138,7 +140,7 @@
             backupTabPage.Location = new Point(4, 24);
             backupTabPage.Name = "backupTabPage";
             backupTabPage.Padding = new Padding(3);
-            backupTabPage.Size = new Size(616, 388);
+            backupTabPage.Size = new Size(696, 388);
             backupTabPage.TabIndex = 0;
             backupTabPage.Text = "Backup";
             backupTabPage.UseVisualStyleBackColor = true;
@@ -158,7 +160,7 @@
             // splitContainer.Panel2
             // 
             splitContainer.Panel2.Controls.Add(backupDataGridView);
-            splitContainer.Size = new Size(610, 382);
+            splitContainer.Size = new Size(690, 382);
             splitContainer.SplitterDistance = 250;
             splitContainer.TabIndex = 0;
             // 
@@ -217,59 +219,18 @@
             backupDataGridView.AllowUserToDeleteRows = false;
             backupDataGridView.AllowUserToResizeRows = false;
             backupDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            backupDataGridView.Columns.AddRange(new DataGridViewColumn[] { backupSelectColumn, backupFilenameColumn, backupDateColumn, backupIncludedFilesColumn, backupRestoreColumn, backupDeleteColumn });
+            backupDataGridView.Columns.AddRange(new DataGridViewColumn[] { backupSelectColumn, backupRestoreColumn, backupFilenameColumn, backupDateColumn, backupIncludedFilesColumn, backupSavedDateColumn, backupNotesColumn, backupDeleteColumn });
             backupDataGridView.Dock = DockStyle.Fill;
             backupDataGridView.Location = new Point(0, 0);
             backupDataGridView.Name = "backupDataGridView";
             backupDataGridView.RowHeadersVisible = false;
             backupDataGridView.RowTemplate.Height = 25;
             backupDataGridView.ShowCellToolTips = false;
-            backupDataGridView.Size = new Size(356, 382);
+            backupDataGridView.Size = new Size(436, 382);
             backupDataGridView.TabIndex = 0;
             backupDataGridView.CellContentClick += BackupDataGridView_CellContentClick;
+            backupDataGridView.CellEndEdit += BackupDataGridView_CellEndEdit;
             backupDataGridView.CellPainting += BackupDataGridView_CellPainting;
-            // 
-            // backupSelectColumn
-            // 
-            backupSelectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
-            backupSelectColumn.HeaderText = "";
-            backupSelectColumn.Name = "backupSelectColumn";
-            backupSelectColumn.ToolTipText = "Select";
-            backupSelectColumn.Visible = false;
-            // 
-            // backupFilenameColumn
-            // 
-            backupFilenameColumn.HeaderText = "Filename";
-            backupFilenameColumn.Name = "backupFilenameColumn";
-            backupFilenameColumn.Visible = false;
-            // 
-            // backupDateColumn
-            // 
-            backupDateColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            backupDateColumn.HeaderText = "Date";
-            backupDateColumn.Name = "backupDateColumn";
-            backupDateColumn.Width = 58;
-            // 
-            // backupIncludedFilesColumn
-            // 
-            backupIncludedFilesColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            backupIncludedFilesColumn.HeaderText = "Included";
-            backupIncludedFilesColumn.Name = "backupIncludedFilesColumn";
-            backupIncludedFilesColumn.Width = 78;
-            // 
-            // backupRestoreColumn
-            // 
-            backupRestoreColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            backupRestoreColumn.HeaderText = "Restore";
-            backupRestoreColumn.Name = "backupRestoreColumn";
-            backupRestoreColumn.Width = 58;
-            // 
-            // backupDeleteColumn
-            // 
-            backupDeleteColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            backupDeleteColumn.HeaderText = "Delete";
-            backupDeleteColumn.Name = "backupDeleteColumn";
-            backupDeleteColumn.Width = 50;
             // 
             // settingsTabPage
             // 
@@ -285,7 +246,7 @@
             settingsTabPage.Location = new Point(4, 24);
             settingsTabPage.Name = "settingsTabPage";
             settingsTabPage.Padding = new Padding(12);
-            settingsTabPage.Size = new Size(616, 388);
+            settingsTabPage.Size = new Size(696, 388);
             settingsTabPage.TabIndex = 2;
             settingsTabPage.Text = "Settings";
             settingsTabPage.UseVisualStyleBackColor = true;
@@ -296,9 +257,9 @@
             enableCameraCheckBox.Location = new Point(15, 121);
             enableCameraCheckBox.Margin = new Padding(3, 12, 3, 3);
             enableCameraCheckBox.Name = "enableCameraCheckBox";
-            enableCameraCheckBox.Size = new Size(264, 19);
+            enableCameraCheckBox.Size = new Size(351, 19);
             enableCameraCheckBox.TabIndex = 10;
-            enableCameraCheckBox.Text = "Enable camera control (reboot is required)";
+            enableCameraCheckBox.Text = "Enable camera control (the application must be restarted)";
             enableCameraCheckBox.UseVisualStyleBackColor = true;
             // 
             // disableAutosaveCheckBox
@@ -398,7 +359,7 @@
             cameraTabPage.Location = new Point(4, 24);
             cameraTabPage.Name = "cameraTabPage";
             cameraTabPage.Padding = new Padding(12);
-            cameraTabPage.Size = new Size(616, 388);
+            cameraTabPage.Size = new Size(696, 388);
             cameraTabPage.TabIndex = 1;
             cameraTabPage.Text = "Camera";
             cameraTabPage.UseVisualStyleBackColor = true;
@@ -537,7 +498,7 @@
             portalTabPage.Location = new Point(4, 24);
             portalTabPage.Name = "portalTabPage";
             portalTabPage.Padding = new Padding(12);
-            portalTabPage.Size = new Size(616, 388);
+            portalTabPage.Size = new Size(696, 388);
             portalTabPage.TabIndex = 3;
             portalTabPage.Text = "Portal";
             portalTabPage.UseVisualStyleBackColor = true;
@@ -625,11 +586,72 @@
             backupFileSystemWatcher.Filter = "*.7z";
             backupFileSystemWatcher.SynchronizingObject = this;
             // 
+            // backupSelectColumn
+            // 
+            backupSelectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            backupSelectColumn.HeaderText = "";
+            backupSelectColumn.Name = "backupSelectColumn";
+            backupSelectColumn.ToolTipText = "Select";
+            backupSelectColumn.Visible = false;
+            backupSelectColumn.Width = 5;
+            // 
+            // backupRestoreColumn
+            // 
+            backupRestoreColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            backupRestoreColumn.HeaderText = "";
+            backupRestoreColumn.MinimumWidth = 32;
+            backupRestoreColumn.Name = "backupRestoreColumn";
+            backupRestoreColumn.ReadOnly = true;
+            backupRestoreColumn.Width = 32;
+            // 
+            // backupFilenameColumn
+            // 
+            backupFilenameColumn.HeaderText = "Filename";
+            backupFilenameColumn.Name = "backupFilenameColumn";
+            backupFilenameColumn.Visible = false;
+            // 
+            // backupDateColumn
+            // 
+            backupDateColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            backupDateColumn.HeaderText = "Date";
+            backupDateColumn.Name = "backupDateColumn";
+            backupDateColumn.ReadOnly = true;
+            backupDateColumn.Width = 58;
+            // 
+            // backupIncludedFilesColumn
+            // 
+            backupIncludedFilesColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            backupIncludedFilesColumn.HeaderText = "Incl.";
+            backupIncludedFilesColumn.Name = "backupIncludedFilesColumn";
+            backupIncludedFilesColumn.ReadOnly = true;
+            backupIncludedFilesColumn.Width = 55;
+            // 
+            // backupSavedDateColumn
+            // 
+            backupSavedDateColumn.HeaderText = "Saved Date";
+            backupSavedDateColumn.Name = "backupSavedDateColumn";
+            backupSavedDateColumn.ReadOnly = true;
+            backupSavedDateColumn.Visible = false;
+            // 
+            // backupNotesColumn
+            // 
+            backupNotesColumn.HeaderText = "Notes";
+            backupNotesColumn.Name = "backupNotesColumn";
+            // 
+            // backupDeleteColumn
+            // 
+            backupDeleteColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            backupDeleteColumn.HeaderText = "";
+            backupDeleteColumn.MinimumWidth = 32;
+            backupDeleteColumn.Name = "backupDeleteColumn";
+            backupDeleteColumn.ReadOnly = true;
+            backupDeleteColumn.Width = 32;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(624, 441);
+            ClientSize = new Size(704, 441);
             Controls.Add(toolStripContainer);
             Name = "MainForm";
             Text = "NMS Save Data Utility";
@@ -700,12 +722,6 @@
         private SplitContainer splitContainer;
         private DataGridView saveDataGridView;
         private DataGridView backupDataGridView;
-        private DataGridViewCheckBoxColumn backupSelectColumn;
-        private DataGridViewTextBoxColumn backupFilenameColumn;
-        private DataGridViewTextBoxColumn backupDateColumn;
-        private DataGridViewTextBoxColumn backupIncludedFilesColumn;
-        private DataGridViewButtonColumn backupRestoreColumn;
-        private DataGridViewButtonColumn backupDeleteColumn;
         private CheckBox enableCameraCheckBox;
         private FileSystemWatcher saveFileSystemWatcher;
         private FileSystemWatcher backupFileSystemWatcher;
@@ -718,5 +734,13 @@
         private Button sendPortalAddressButton;
         private TextBox portalAddressTextBox;
         private Label portalGlyphsLabel;
+        private DataGridViewCheckBoxColumn backupSelectColumn;
+        private DataGridViewButtonColumn backupRestoreColumn;
+        private DataGridViewTextBoxColumn backupFilenameColumn;
+        private DataGridViewTextBoxColumn backupDateColumn;
+        private DataGridViewTextBoxColumn backupIncludedFilesColumn;
+        private DataGridViewTextBoxColumn backupSavedDateColumn;
+        private DataGridViewTextBoxColumn backupNotesColumn;
+        private DataGridViewButtonColumn backupDeleteColumn;
     }
 }
