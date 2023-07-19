@@ -1,6 +1,6 @@
 ﻿# No Man's Sky Save Data Utility
 
-![image](https://github.com/nefilmjp/nms-save-data-util/assets/136662366/605d0db2-752e-40e9-8aeb-6c6ace5365b7)
+![image](https://github.com/nefilmjp/nms-save-data-util/assets/136662366/5434ff64-c67c-4404-a543-c16dc68ebb04)
 
 - Currently unstable
 - For Windows
