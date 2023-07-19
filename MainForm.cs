@@ -39,8 +39,6 @@ namespace NMSSaveDataUtil
             saveFolderTextBox.DataBindings.Add(new Binding("Text", settings, "SaveFolder", true));
             backupFolderTextBox.DataBindings.Add(new Binding("Text", settings, "BackupFolder", true));
 
-            deleteAutosaveCheckBox.DataBindings.Add(new Binding("Checked", settings, "DeleteAutosave", true));
-            disableAutosaveCheckBox.DataBindings.Add(new Binding("Checked", settings, "DisableAutosave", true));
             enableCameraCheckBox.DataBindings.Add(new Binding("Checked", settings, "EnableCamera", true));
 
             cameraMoveSpeedNumericUpDown.DataBindings.Add(new Binding("Value", settings, "CameraMoveSpeed", true));
@@ -69,47 +67,6 @@ namespace NMSSaveDataUtil
             }
         }
 
-        private void LockButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (settings.SaveFolder == "") return;
-            if (lockButton.Checked)
-            {
-                lockButton.Text = "Unlock Save Files";
-                lockButton.Image = Properties.Resources.Unlock;
-                LockSaveFiles.Start(settings.SaveFolder);
-            }
-            else
-            {
-                lockButton.Text = "Lock Save Files";
-                lockButton.Image = Properties.Resources.Lock;
-                LockSaveFiles.Stop(settings.SaveFolder);
-            }
-        }
-
-        private void BackupButton_Click(object sender, EventArgs e)
-        {
-            if (settings.SaveFolder == "" || settings.BackupFolder == "") return;
-
-            saveDataGridView.CurrentCell = null; // Reflect current state
-            string[] paths = ListFiles.GetSelectedSavePaths(saveDataGridView, settings.SaveFolder);
-
-            if (paths.Length == 0) return;
-
-            string date = DateTime.Now.ToString("yyyyMMddHHmmss");
-            string includes = ListFiles.GetSaveIncludes(saveDataGridView);
-
-            Archiver.Compress(@$"{settings.BackupFolder}\{date}_{includes}.7z", paths);
-        }
-
-        private void UpdateSaveGrid(System.Object source, System.IO.FileSystemEventArgs e)
-        {
-            ListFiles.InitSaveGrid(saveDataGridView, settings);
-        }
-
-        private void UpdateBackupGrid(System.Object source, System.IO.FileSystemEventArgs e)
-        {
-            ListFiles.InitBackupGrid(backupDataGridView, settings.BackupFolder);
-        }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -150,7 +107,7 @@ namespace NMSSaveDataUtil
             // Init DataGridView
             if (settings.SaveFolder != "")
             {
-                LockSaveFiles.Stop(settings.SaveFolder);
+                LockSaveFiles.Stop(settings);
 
                 ListFiles.InitSaveGrid(saveDataGridView, settings);
                 saveFileSystemWatcher.Path = settings.SaveFolder;
@@ -163,11 +120,13 @@ namespace NMSSaveDataUtil
                 backupFileSystemWatcher.Path = settings.BackupFolder;
                 backupFileSystemWatcher.EnableRaisingEvents = true;
             }
+
+            LockSaveFiles.Init(settings);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (settings.SaveFolder != "") LockSaveFiles.Stop(settings.SaveFolder);
+            if (settings.SaveFolder != "") LockSaveFiles.Stop(settings);
 
             settings.SaveFolder = settings.SaveFolder;
             settings.BackupFolder = settings.BackupFolder;
@@ -175,7 +134,7 @@ namespace NMSSaveDataUtil
             if (settings.SaveFolder != "")
             {
                 // saveDataGridView.CurrentCell = null;
-                settings.SaveFiles = ListFiles.GetSelectedFiles(saveDataGridView);
+                settings.BackupTargets = ListFiles.GetSelectedSaveFiles(saveDataGridView);
             }
 
             settings.WinState = WindowState;
@@ -193,30 +152,37 @@ namespace NMSSaveDataUtil
             Settings.Save(settings);
         }
 
-        private void SaveFolderButton_Click(object sender, EventArgs e)
+        private void LockButton_CheckedChanged(object sender, EventArgs e)
         {
-            string res = FolderDialog.SelectSavePath(settings.SaveFolder);
-            if (res != "")
+            if (settings.SaveFolder == "") return;
+            if (lockButton.Checked)
             {
-                saveFileSystemWatcher.EnableRaisingEvents = false;
-                settings.SaveFolder = res;
-                ListFiles.InitSaveGrid(saveDataGridView, settings);
-                saveFileSystemWatcher.Path = settings.SaveFolder;
-                saveFileSystemWatcher.EnableRaisingEvents = true;
+                lockButton.Text = "Unlock";
+                lockButton.Image = Properties.Resources.Unlock;
+                LockSaveFiles.Start(settings);
             }
+            else
+            {
+                lockButton.Text = "Lock";
+                lockButton.Image = Properties.Resources.Lock;
+                LockSaveFiles.Stop(settings);
+            }
+            saveDataGridView.Refresh();
         }
 
-        private void BackupFolderButton_Click(object sender, EventArgs e)
+        private void BackupButton_Click(object sender, EventArgs e)
         {
-            string res = FolderDialog.SelectBackupPath(settings.BackupFolder);
-            if (res != "")
-            {
-                saveFileSystemWatcher.EnableRaisingEvents = false;
-                settings.BackupFolder = res;
-                ListFiles.InitBackupGrid(backupDataGridView, settings.BackupFolder);
-                saveFileSystemWatcher.Path = settings.BackupFolder;
-                saveFileSystemWatcher.EnableRaisingEvents = true;
-            }
+            if (settings.SaveFolder == "" || settings.BackupFolder == "") return;
+
+            saveDataGridView.CurrentCell = null; // Reflect current state
+            string[] paths = ListFiles.GetSelectedSavePaths(saveDataGridView, settings.SaveFolder);
+
+            if (paths.Length == 0) return;
+
+            string date = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string includes = ListFiles.GetSaveIncludes(saveDataGridView);
+
+            Archiver.Compress(@$"{settings.BackupFolder}\{date}_{includes}.7z", paths);
         }
 
         private void MoveCameraButton_Click(object sender, EventArgs e)
@@ -227,6 +193,83 @@ namespace NMSSaveDataUtil
             int duration = (int)cameraDurationNumericUpDown.Value;
 
             camera?.Start(move, delay, rotate, duration);
+        }
+
+        private void UpdateSaveGrid(System.Object source, System.IO.FileSystemEventArgs e)
+        {
+            ListFiles.InitSaveGrid(saveDataGridView, settings);
+        }
+
+        private void SaveDataGridView_Paint(object sender, PaintEventArgs e)
+        {
+            Debug.WriteLine("SaveDataGridView_Paint");
+
+            if (saveDataGridView.ColumnHeadersHeight + saveDataGridView.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + 2 > splitContainer.Height)
+            {
+                splitContainer.SplitterDistance = saveDataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 3 + 18;
+            }
+            else
+            {
+                splitContainer.SplitterDistance = saveDataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 3;
+            }
+        }
+
+        private void SaveDataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex < 0) { return; }
+
+            DataGridView dgv = (DataGridView)sender;
+
+            if (e.ColumnIndex == 1)
+            {
+                e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+
+                var w = Properties.Resources.Return.Width;
+                var h = Properties.Resources.Return.Height;
+                var x = e.CellBounds.Left + (e.CellBounds.Width - w) / 2;
+                var y = e.CellBounds.Top + (e.CellBounds.Height - h) / 2;
+
+                switch (settings.GetFileSetting(dgv.Rows[e.RowIndex].Cells["saveFilenameColumn"].Value.ToString()!))
+                {
+                    case "thru":
+                        // e.Graphics.DrawImage(Properties.Resources.HiddenFile, new Rectangle(x, y, w, h));
+                        break;
+                    case "lock":
+                        e.Graphics.DrawImage(Properties.Resources.MapPublic, new Rectangle(x, y, w, h));
+                        break;
+                    case "ctrl":
+                        if (lockButton.Checked == true)
+                        {
+                            e.Graphics.DrawImage(Properties.Resources.Lock, new Rectangle(x, y, w, h));
+                        }
+                        else
+                        {
+                            e.Graphics.DrawImage(Properties.Resources.Unlock, new Rectangle(x, y, w, h));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                e.Handled = true;
+            }
+        }
+
+        private void SaveDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) { return; }
+
+            DataGridView dgv = (DataGridView)sender;
+
+            if (e.ColumnIndex == 1)
+            {
+                Rectangle rect = dgv.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                saveContextMenuStrip.Show(dgv, new System.Drawing.Point(rect.X + 32, rect.Y));
+            }
+        }
+
+        private void UpdateBackupGrid(System.Object source, System.IO.FileSystemEventArgs e)
+        {
+            ListFiles.InitBackupGrid(backupDataGridView, settings.BackupFolder);
         }
 
         private void BackupDataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -258,20 +301,6 @@ namespace NMSSaveDataUtil
 
                 e.Graphics.DrawImage(Properties.Resources.Delete, new Rectangle(x, y, w, h));
                 e.Handled = true;
-            }
-        }
-
-        private void SaveDataGridView_Paint(object sender, PaintEventArgs e)
-        {
-            Debug.WriteLine("SaveDataGridView_Paint");
-
-            if (saveDataGridView.ColumnHeadersHeight + saveDataGridView.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + 2 > splitContainer.Height)
-            {
-                splitContainer.SplitterDistance = saveDataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 3 + 18;
-            }
-            else
-            {
-                splitContainer.SplitterDistance = saveDataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 3;
             }
         }
 
@@ -325,10 +354,30 @@ namespace NMSSaveDataUtil
             File.Move(@$"{settings.BackupFolder}\{oldFilename}", @$"{settings.BackupFolder}\{newFilename}");
         }
 
-        private void SendPortalAddressButton_Click(object sender, EventArgs e)
+        private void SaveFolderButton_Click(object sender, EventArgs e)
         {
-            string address = portalAddressTextBox.Text;
-            portal?.SendAddress(address);
+            string res = FolderDialog.SelectSavePath(settings.SaveFolder);
+            if (res != "")
+            {
+                saveFileSystemWatcher.EnableRaisingEvents = false;
+                settings.SaveFolder = res;
+                ListFiles.InitSaveGrid(saveDataGridView, settings);
+                saveFileSystemWatcher.Path = settings.SaveFolder;
+                saveFileSystemWatcher.EnableRaisingEvents = true;
+            }
+        }
+
+        private void BackupFolderButton_Click(object sender, EventArgs e)
+        {
+            string res = FolderDialog.SelectBackupPath(settings.BackupFolder);
+            if (res != "")
+            {
+                saveFileSystemWatcher.EnableRaisingEvents = false;
+                settings.BackupFolder = res;
+                ListFiles.InitBackupGrid(backupDataGridView, settings.BackupFolder);
+                saveFileSystemWatcher.Path = settings.BackupFolder;
+                saveFileSystemWatcher.EnableRaisingEvents = true;
+            }
         }
 
         private void PortalAddressTextBox_TextChanged(object sender, EventArgs e)
@@ -344,6 +393,51 @@ namespace NMSSaveDataUtil
             {
                 sendPortalAddressButton.Enabled = false;
             }
+        }
+
+        private void SendPortalAddressButton_Click(object sender, EventArgs e)
+        {
+            string address = portalAddressTextBox.Text;
+            portal?.SendAddress(address);
+        }
+
+        private void ThruToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridViewCell cell = saveDataGridView.SelectedCells[0];
+            string filename = saveDataGridView.Rows[cell.RowIndex].Cells["saveFilenameColumn"].Value.ToString()!;
+            settings.SetFileSetting(filename, "thru");
+            LockSaveFiles.Unlockfile(@$"{settings.SaveFolder}\{filename}");
+            LockSaveFiles.Unlockfile(@$"{settings.SaveFolder}\mf_{filename}");
+            saveDataGridView.CurrentCell = null;
+        }
+
+        private void CtrlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridViewCell cell = saveDataGridView.SelectedCells[0];
+            string filename = saveDataGridView.Rows[cell.RowIndex].Cells["saveFilenameColumn"].Value.ToString()!;
+            settings.SetFileSetting(filename, "ctrl");
+            if (lockButton.Checked)
+            {
+                LockSaveFiles.Lockfile(@$"{settings.SaveFolder}\{filename}");
+                LockSaveFiles.Lockfile(@$"{settings.SaveFolder}\mf_{filename}");
+
+            }
+            else
+            {
+                LockSaveFiles.Unlockfile(@$"{settings.SaveFolder}\{filename}");
+                LockSaveFiles.Unlockfile(@$"{settings.SaveFolder}\mf_{filename}");
+            }
+            saveDataGridView.CurrentCell = null;
+        }
+
+        private void LockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridViewCell cell = saveDataGridView.SelectedCells[0];
+            string filename = saveDataGridView.Rows[cell.RowIndex].Cells["saveFilenameColumn"].Value.ToString()!;
+            settings.SetFileSetting(filename, "lock");
+            LockSaveFiles.Lockfile(@$"{settings.SaveFolder}\{filename}");
+            LockSaveFiles.Lockfile(@$"{settings.SaveFolder}\mf_{filename}");
+            saveDataGridView.CurrentCell = null;
         }
     }
 }

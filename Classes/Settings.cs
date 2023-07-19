@@ -1,21 +1,37 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace NMSSaveDataUtil.Classes
 {
+    public class FileSetting
+    {
+        private string _filename = "";
+        private string _mode = "thru"; // thru, lock, ctrl
+        public string Filename
+        {
+            get { return _filename; }
+            set { _filename = value; }
+        }
+        public string Mode
+        {
+            get { return _mode; }
+            set { _mode = value; }
+        }
+    }
+
     public class Settings : INotifyPropertyChanged
     {
         private string _saveFolder;
         private string _backupFolder;
-        private bool _deleteAutosave;
-        private bool _disableAutosave;
         private bool _enableCamera;
         private short _cameraMoveSpeed;
         private int _cameraRotateDelay;
         private short _cameraRotateSpeed;
         private int _cameraDuration;
         private bool _enablePortal;
-        private List<string> _saveFiles;
+        private List<FileSetting> _fileSettings;
+        private List<string> _backupTargets;
         private Point _winLocation;
         private Size _winSize;
         private FormWindowState _winState;
@@ -28,7 +44,8 @@ namespace NMSSaveDataUtil.Classes
             _cameraRotateSpeed = -22000;
             _cameraDuration = 21000;
             _enablePortal = false;
-            _saveFiles = new List<string>() { "accountdata.hg", "save.hg", "save2.hg" };
+            _fileSettings = new List<FileSetting>();
+            _backupTargets = new List<string>() { "accountdata.hg", "save.hg", "save2.hg" };
             _winLocation = new Point(0, 0);
             _winSize = new Size(0, 0);
             _winState = FormWindowState.Normal;
@@ -62,24 +79,6 @@ namespace NMSSaveDataUtil.Classes
             {
                 _backupFolder = value;
                 OnPropertyChanged("BackupFolder");
-            }
-        }
-        public bool DeleteAutosave
-        {
-            get { return _deleteAutosave; }
-            set
-            {
-                _deleteAutosave = value;
-                OnPropertyChanged("DeleteAutosave");
-            }
-        }
-        public bool DisableAutosave
-        {
-            get { return _disableAutosave; }
-            set
-            {
-                _disableAutosave = value;
-                OnPropertyChanged("DisableAutosave");
             }
         }
         public bool EnableCamera
@@ -136,13 +135,22 @@ namespace NMSSaveDataUtil.Classes
                 OnPropertyChanged("EnablePortal");
             }
         }
-        public string[] SaveFiles
+        public string[] BackupTargets
         {
-            get { return _saveFiles.ToArray(); }
+            get { return _backupTargets.ToArray(); }
             set
             {
-                _saveFiles = value.ToList();
-                OnPropertyChanged("SaveFiles");
+                _backupTargets = value.ToList();
+                OnPropertyChanged("BackupTargets");
+            }
+        }
+        public List<FileSetting> FileSettings
+        {
+            get { return _fileSettings; }
+            set
+            {
+                _fileSettings = value;
+                OnPropertyChanged("FileSettings");
             }
         }
         public Point WinLocation
@@ -173,8 +181,30 @@ namespace NMSSaveDataUtil.Classes
             }
         }
 
+        public string GetFileSetting(string filename)
+        {
+            FileSetting? saveSetting = _fileSettings.Find(ss => ss.Filename == filename);
+            if (saveSetting == null) { return ""; }
+            return saveSetting.Mode;
+        }
+
+        public void SetFileSetting(string filename, string mode)
+        {
+            int saveIndex = _fileSettings.FindIndex(ss => ss.Filename == filename);
+            if (saveIndex == -1)
+            {
+                _fileSettings.Add(new FileSetting { Filename = filename, Mode = mode });
+            }
+            else
+            {
+                _fileSettings[saveIndex].Mode = mode;
+            }
+        }
+
         public static void Save(Settings settings)
         {
+            CleanFileSettings(settings);
+
             XmlSerializer serializer = new(typeof(Settings));
 
             FileStream fs = new($@"{Directory.GetCurrentDirectory()}\Settings.xml", FileMode.Create);
@@ -201,6 +231,15 @@ namespace NMSSaveDataUtil.Classes
                 }
             }
             return new Settings();
+        }
+
+        private static void CleanFileSettings(Settings settings)
+        {
+            settings.FileSettings = settings.FileSettings.Where(ss =>
+            {
+                if (File.Exists($@"{settings.SaveFolder}\{ss.Filename}") && ss.Mode != "thru") return true;
+                return false;
+            }).ToList();
         }
     }
 }

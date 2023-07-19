@@ -10,23 +10,6 @@ namespace NMSSaveDataUtil.Classes
             return files;
         }
 
-        public static string[] GetSelectedFiles(DataGridView grid)
-        {
-            var rows = grid.Rows.Cast<DataGridViewRow>();
-            string[] selectedFiles = rows
-                .Where(row => row.Cells[0].Value != null && row.Cells[0].Value.ToString() != "")
-                .Select(row => row.Cells[1].Value.ToString()!).ToArray();
-
-            /*
-            foreach (var row in rows)
-            {
-                System.Diagnostics.Debug.WriteLine(row.Cells[0].Value);
-            }
-            */
-
-            return selectedFiles;
-        }
-
         #region Save
 
         public static bool IsSave(string path)
@@ -50,7 +33,7 @@ namespace NMSSaveDataUtil.Classes
         public static void InitSaveGrid(DataGridView grid, Settings settings)
         {
             string path = settings.SaveFolder;
-            string[] selectedFilename = settings.SaveFiles;
+            string[] selectedFilename = settings.BackupTargets;
 
             grid.Rows.Clear();
             string[] files = GetSaveFiles(path);
@@ -59,21 +42,21 @@ namespace NMSSaveDataUtil.Classes
                 string filename = Path.GetFileName(file);
 
                 grid.Rows.Add();
-                grid.Rows[idx].Cells[1].Value = filename;
-                grid.Rows[idx].Cells[2].Value = File.GetLastWriteTime(file);
+                grid.Rows[idx].Cells["saveFilenameColumn"].Value = filename;
+                grid.Rows[idx].Cells["saveDateColumn"].Value = File.GetLastWriteTime(file);
 
                 if (Array.IndexOf(selectedFilename, filename) >= 0)
                 {
-                    grid.Rows[idx].Cells[0].Value = true;
+                    grid.Rows[idx].Cells["saveSelectedColumn"].Value = true;
                 }
             }
-            grid.Sort(grid.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
+            grid.Sort(grid.Columns["saveFilenameColumn"], System.ComponentModel.ListSortDirection.Ascending);
             grid.CurrentCell = null;
         }
 
         public static string GetSaveIncludes(DataGridView grid)
         {
-            string[] selectedFiles = GetSelectedFiles(grid);
+            string[] selectedFiles = GetSelectedSaveFiles(grid);
 
             var indexes = selectedFiles.ToList().Select(filename =>
             {
@@ -97,7 +80,7 @@ namespace NMSSaveDataUtil.Classes
 
         public static string[] GetSelectedSavePaths(DataGridView grid, string dir)
         {
-            string[] selectedFiles = GetSelectedFiles(grid);
+            string[] selectedFiles = GetSelectedSaveFiles(grid);
 
             List<string> selectedSavefiles = new();
 
@@ -108,6 +91,26 @@ namespace NMSSaveDataUtil.Classes
             }
 
             return selectedSavefiles.ToArray();
+        }
+
+        public static string[] GetSelectedSaveFiles(DataGridView grid)
+        {
+            var rows = grid.Rows.Cast<DataGridViewRow>();
+            string[] selectedFiles = rows
+                .Where(row => row.Cells["saveSelectedColumn"].Value != null && row.Cells["saveSelectedColumn"].Value.ToString() != "")
+                .Select(row => row.Cells["saveFilenameColumn"].Value.ToString()!).ToArray();
+
+            return selectedFiles;
+        }
+
+        public string[] GetSaveFilesByMode(DataGridView grid, string mode)
+        {
+            var rows = grid.Rows.Cast<DataGridViewRow>();
+            string[] selectedFiles = rows
+                .Where(row => row.Cells["modeColumn"].Value != null && row.Cells["modeColumn"].Value.ToString() == mode)
+                .Select(row => row.Cells["saveFilenameColumn"].Value.ToString()!).ToArray();
+
+            return selectedFiles;
         }
 
         #endregion
@@ -152,7 +155,7 @@ namespace NMSSaveDataUtil.Classes
                 grid.Rows[idx].Cells["backupSavedDateColumn"].Value = savedDate;
                 grid.Rows[idx].Cells["backupNotesColumn"].Value = notes;
             }
-            grid.Sort(grid.Columns[2], System.ComponentModel.ListSortDirection.Descending);
+            grid.Sort(grid.Columns["backupDateColumn"], System.ComponentModel.ListSortDirection.Descending);
             grid.CurrentCell = null;
         }
 
