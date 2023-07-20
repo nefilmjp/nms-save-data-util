@@ -1,0 +1,32 @@
+name: .NET Core Windows 64bit Binary
+
+on:
+  push:
+    branches: [ "actions" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output
+
+    - name: Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: win-x64-binary
+        path: 'output/NMSSaveDataUtil.exe'
+        retention-days: 1
