@@ -46,7 +46,9 @@
     </None>
   </ItemGroup>
 
-  <Target Name="Copy7ZipExe" AfterTargets="Build">
+  <Target Name="CopyFiles" AfterTargets="Build">
     <Copy SourceFiles="$(Pkg7-Zip_CommandLine)\tools\x64\7za.exe" DestinationFolder="$(PublishDir)" />
+	<Copy SourceFiles="LICENSE" DestinationFolder="$(PublishDir)" />
+	<Copy SourceFiles="README.md" DestinationFolder="$(PublishDir)" />
   </Target>
 </Project>

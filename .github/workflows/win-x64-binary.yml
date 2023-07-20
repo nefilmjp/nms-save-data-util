@@ -22,7 +22,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output
+      run: dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output -p:PublishDir=output
 
     - name: Artifact
       uses: actions/upload-artifact@v3
@@ -31,6 +31,6 @@ jobs:
         path: |
           output/NMSSaveDataUtil.exe
           output/7za.exe
-          LICENSE
-          README.md
+          output/LICENSE
+          output/README.md
         retention-days: 1
