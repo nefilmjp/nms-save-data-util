@@ -18,7 +18,7 @@ jobs:
         fetch-depth: 0
 
     - name: Cache
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/.nuget/packages
         key: nuget-${{ runner.os }}-6.0.x
@@ -44,17 +44,23 @@ jobs:
         echo $Env:VERSION
         dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output -p:PublishDir=output -p:Version=$Env:VERSION
 
-    - name: Artifact
+    - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: NMSSaveDataUtil-${{ env.GITHUB_REF_NAME }}-win-x64
+        name: NMSSaveDataUtil-$Env:GITHUB_REF_NAME-win-x64
         path: |
           output/NMSSaveDataUtil.exe
           output/7za.exe
         retention-days: 1
 
+    - name: Download upload-artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: NMSSaveDataUtil-$Env:GITHUB_REF_NAME-win-x64
+        path: artifact/
+
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: output/*
+        files: artifact/*
