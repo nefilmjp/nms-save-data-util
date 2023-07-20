@@ -47,16 +47,16 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: NMSSaveDataUtil-$Env:GITHUB_REF_NAME-win-x64
+        name: NMSSaveDataUtil-${{ github.ref_name }}-win-x64
         path: |
           output/NMSSaveDataUtil.exe
           output/7za.exe
         retention-days: 1
 
-    - name: Download upload-artifact
+    - name: Download Artifact
       uses: actions/download-artifact@v3
       with:
-        name: NMSSaveDataUtil-$Env:GITHUB_REF_NAME-win-x64
+        name: NMSSaveDataUtil-${{ github.ref_name }}-win-x64
         path: artifact/
 
     - name: Release
