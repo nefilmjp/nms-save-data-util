@@ -1,0 +1,50 @@
+name: Test Build
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/.nuget/packages
+        key: nuget-${{ runner.os }}-6.0.x
+        restore-keys: |
+          nuget-${{ runner.os }}-
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Publish
+      run: |
+        dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output -p:PublishDir=output -p:Version=0.0.0.0
+
+    - name: Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: win-x64-binary
+        path: |
+          output/NMSSaveDataUtil.exe
+          output/7za.exe
+        retention-days: 1
