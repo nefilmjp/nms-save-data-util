@@ -17,12 +17,11 @@ jobs:
       with:
         fetch-depth: 0
 
-    steps:
     - name: Cache
       uses: actions/cache@v1
       with:
         path: ${{ github.workspace }}/.nuget/packages
-        key: nuget-${{ runner.os }}-${{ matrix.dotnet-version }}
+        key: nuget-${{ runner.os }}-6.0.x
         restore-keys: |
           nuget-${{ runner.os }}-
 
