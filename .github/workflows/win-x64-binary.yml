@@ -2,7 +2,8 @@ name: .NET Core Windows 64bit Binary
 
 on:
   push:
-    branches: [ "actions" ]
+    branches:
+      - actions-ignore
 
 jobs:
   build:
@@ -18,11 +19,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+
     - name: Restore
       run: dotnet restore
 
     - name: Build
-      run: dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output -p:PublishDir=output
+      env:
+        PR_NUMBER: ${{ github.event.number || 0 }}
+      run: dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output -p:PublishDir=output -p:Version=1.0.0.$Env:PR_NUMBER
 
     - name: Artifact
       uses: actions/upload-artifact@v3
@@ -31,6 +35,4 @@ jobs:
         path: |
           output/NMSSaveDataUtil.exe
           output/7za.exe
-          output/LICENSE
-          output/README.md
         retention-days: 1
