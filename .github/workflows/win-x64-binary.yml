@@ -1,4 +1,4 @@
-name: .NET Core Windows 64bit Binary
+name: Test Build
 
 on:
   push:
@@ -37,15 +37,8 @@ jobs:
       run: dotnet restore
 
     - name: Publish
-      env:
-        PR_NUMBER: ${{ github.event.number || 0 }}
       run: |
-        echo $Env:PR_NUMBER
-        $Env:SEMVER = $Env:GITHUB_REF_NAME.SubString(1)
-        echo $Env:SEMVER
-        $Env:VERSION = "$Env:SEMVER.$Env:PR_NUMBER"
-        echo $Env:VERSION
-        dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output -p:PublishDir=output -p:Version=$Env:VERSION
+        dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o output -p:PublishDir=output -p:Version=0.0.0.0
 
     - name: Artifact
       uses: actions/upload-artifact@v3
