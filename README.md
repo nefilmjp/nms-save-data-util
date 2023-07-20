@@ -8,5 +8,3 @@
 - Compress specified save game files with 7-Zip for backup
 - Restore backup
 - Requires [7-Zip Extra](https://7-zip.org/download.html) ( `7za.exe` to be placed in the same location as the executable)
-- Automation of camera work with virtual controller (experimental)
-    - Requires [ViGEmBus](https://github.com/ViGEm/ViGEmBus/releases)

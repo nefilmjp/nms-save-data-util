@@ -331,6 +331,7 @@
             enableCameraCheckBox.TabIndex = 10;
             enableCameraCheckBox.Text = "Enable camera control (the application must be restarted)";
             enableCameraCheckBox.UseVisualStyleBackColor = true;
+            enableCameraCheckBox.Visible = false;
             // 
             // backupFolderTextBox
             // 
