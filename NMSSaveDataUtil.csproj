@@ -3,10 +3,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-	<UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
@@ -14,7 +14,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
 
   <ItemGroup>
-    <PackageReference Include="7-Zip.CommandLine" Version="18.1.0" />
+    <PackageReference Include="7-Zip.CommandLine" Version="18.1.0" GeneratePathProperty="true" />
     <PackageReference Include="Nefarius.ViGEm.Client" Version="1.21.256" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
@@ -46,4 +46,7 @@
     </None>
   </ItemGroup>
 
+  <Target Name="Copy7ZipExe" AfterTargets="Build">
+    <Copy SourceFiles="$(Pkg7-Zip_CommandLine)\tools\x64\7za.exe" DestinationFolder="$(PublishDir)" />
+  </Target>
 </Project>

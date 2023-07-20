@@ -726,7 +726,6 @@
         private TabPage backupTabPage;
         private TabPage settingsTabPage;
         private TextBox saveFolderTextBox;
-        private TextBox cameraRotateSpeedTextBox;
         private Label saveFolderLabel;
         private Label backupFolderLabel;
         private TextBox backupFolderTextBox;
@@ -767,8 +766,6 @@
         private ToolStripMenuItem thruToolStripMenuItem;
         private ToolStripMenuItem ctrlToolStripMenuItem;
         private ToolStripMenuItem lockToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem deleteToolStripMenuItem;
         private DataGridViewCheckBoxColumn saveSelectedColumn;
         private DataGridViewButtonColumn saveModeColumn;
         private DataGridViewTextBoxColumn saveFilenameColumn;
