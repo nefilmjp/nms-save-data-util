@@ -28,5 +28,9 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: win-x64-binary
-        path: 'output/NMSSaveDataUtil.exe'
+        path: |
+          output/NMSSaveDataUtil.exe
+          output/7za.exe
+          LICENSE
+          README.md
         retention-days: 1
