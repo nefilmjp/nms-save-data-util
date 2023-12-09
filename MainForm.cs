@@ -202,7 +202,7 @@ namespace NMSSaveDataUtil
 
         private void UpdateSaveGrid(System.Object source, System.IO.FileSystemEventArgs e)
         {
-            ListFiles.InitSaveGrid(saveDataGridView, settings);
+            ListFiles.ReloadSaveGrid(saveDataGridView, settings, lockButton.Checked);
         }
 
         private void SaveDataGridView_Paint(object sender, PaintEventArgs e)

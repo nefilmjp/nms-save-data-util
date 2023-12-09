@@ -59,7 +59,7 @@ namespace NMSSaveDataUtil.Classes
                 if (ss.Mode == "lock")
                 {
                     Lockfile(@$"{settings.SaveFolder}\{ss.Filename}");
-                    Lockfile(@$"{settings.SaveFolder}\{ss.Filename}");
+                    Lockfile(@$"{settings.SaveFolder}\mf_{ss.Filename}");
                 }
             });
         }

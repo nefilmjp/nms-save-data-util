@@ -57,6 +57,23 @@ namespace NMSSaveDataUtil.Classes
             grid.ResumeLayout();
         }
 
+        /// <summary>
+        /// セーブファイルに変更があった場合のリロード処理
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="settings"></param>
+        /// <param name="isLocked">ロック中かどうか</param>
+        public static void ReloadSaveGrid(DataGridView grid, Settings settings, bool isLocked)
+        {
+            InitSaveGrid(grid, settings);
+
+            LockSaveFiles.Init(settings);
+            if (isLocked)
+            {
+                LockSaveFiles.Start(settings);
+            }
+        }
+
         public static string GetSaveIncludes(DataGridView grid)
         {
             string[] selectedFiles = GetSelectedSaveFiles(grid);
