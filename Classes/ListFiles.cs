@@ -96,6 +96,11 @@ namespace NMSSaveDataUtil.Classes
             return selectedSavefiles.ToArray();
         }
 
+        /// <summary>
+        /// バックアップ対象のセーブデータのファイル名一覧を取得する
+        /// </summary>
+        /// <param name="grid">セーブデータ一覧用DataGridView</param>
+        /// <returns>選択されたファイル名の配列</returns>
         public static string[] GetSelectedSaveFiles(DataGridView grid)
         {
             var rows = grid.Rows.Cast<DataGridViewRow>();

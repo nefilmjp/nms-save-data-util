@@ -265,6 +265,13 @@ namespace NMSSaveDataUtil
 
             DataGridView dgv = (DataGridView)sender;
 
+            // Update checkbox
+            if (e.ColumnIndex == 0)
+            {
+                saveDataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                settings.BackupTargets = ListFiles.GetSelectedSaveFiles(saveDataGridView);
+            }
+
             if (e.ColumnIndex == 1)
             {
                 Rectangle rect = dgv.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
