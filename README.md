@@ -6,6 +6,7 @@ The desktop application for Windows to backup/restore/lock/unlock save files.
 
 - Currently unstable
 - For Windows only
+  - Requires [.NET Desktop Runtime 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
 - Installation: Unzip and place files
 - Uninstallation: Delete files
 - Reset: Empty lock targets, exit the app and delete `Settings.xml`
