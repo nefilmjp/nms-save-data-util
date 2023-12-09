@@ -36,6 +36,7 @@ namespace NMSSaveDataUtil.Classes
             string[] selectedFilename = settings.BackupTargets;
 
             grid.Rows.Clear();
+            grid.SuspendLayout();
             string[] files = GetSaveFiles(path);
             foreach ((string file, int idx) in files.Select((x, i) => (x, i)))
             {
@@ -50,8 +51,27 @@ namespace NMSSaveDataUtil.Classes
                     grid.Rows[idx].Cells["saveSelectedColumn"].Value = true;
                 }
             }
-            grid.Sort(grid.Columns["saveFilenameColumn"], System.ComponentModel.ListSortDirection.Ascending);
+            // grid.Sort(grid.Columns["saveFilenameColumn"], System.ComponentModel.ListSortDirection.Ascending);
+            grid.Sort(new NaturalSortComparer("saveFilenameColumn"));
             grid.CurrentCell = null;
+            grid.ResumeLayout();
+        }
+
+        /// <summary>
+        /// セーブファイルに変更があった場合のリロード処理
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="settings"></param>
+        /// <param name="isLocked">ロック中かどうか</param>
+        public static void ReloadSaveGrid(DataGridView grid, Settings settings, bool isLocked)
+        {
+            InitSaveGrid(grid, settings);
+
+            LockSaveFiles.Init(settings);
+            if (isLocked)
+            {
+                LockSaveFiles.Start(settings);
+            }
         }
 
         public static string GetSaveIncludes(DataGridView grid)
@@ -93,6 +113,11 @@ namespace NMSSaveDataUtil.Classes
             return selectedSavefiles.ToArray();
         }
 
+        /// <summary>
+        /// バックアップ対象のセーブデータのファイル名一覧を取得する
+        /// </summary>
+        /// <param name="grid">セーブデータ一覧用DataGridView</param>
+        /// <returns>選択されたファイル名の配列</returns>
         public static string[] GetSelectedSaveFiles(DataGridView grid)
         {
             var rows = grid.Rows.Cast<DataGridViewRow>();
@@ -103,7 +128,7 @@ namespace NMSSaveDataUtil.Classes
             return selectedFiles;
         }
 
-        public string[] GetSaveFilesByMode(DataGridView grid, string mode)
+        public static string[] GetSaveFilesByMode(DataGridView grid, string mode)
         {
             var rows = grid.Rows.Cast<DataGridViewRow>();
             string[] selectedFiles = rows
@@ -138,6 +163,7 @@ namespace NMSSaveDataUtil.Classes
         public static void InitBackupGrid(DataGridView grid, string path)
         {
             grid.Rows.Clear();
+            grid.SuspendLayout();
             string[] files = GetBackupFiles(path);
             foreach ((string file, int idx) in files.Select((x, i) => (x, i)))
             {
@@ -157,6 +183,7 @@ namespace NMSSaveDataUtil.Classes
             }
             grid.Sort(grid.Columns["backupDateColumn"], System.ComponentModel.ListSortDirection.Descending);
             grid.CurrentCell = null;
+            grid.ResumeLayout();
         }
 
         #endregion

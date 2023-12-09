@@ -67,9 +67,10 @@ namespace NMSSaveDataUtil
             }
         }
 
-
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Cache.CreateTempDir();
+
             if (settings.WinSize.Width == 0 || settings.WinSize.Height == 0)
             {
                 // Set default values if needed
@@ -126,6 +127,8 @@ namespace NMSSaveDataUtil
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Cache.DeleteTempDir();
+
             if (settings.SaveFolder != "") LockSaveFiles.Stop(settings);
 
             settings.SaveFolder = settings.SaveFolder;
@@ -175,14 +178,16 @@ namespace NMSSaveDataUtil
             if (settings.SaveFolder == "" || settings.BackupFolder == "") return;
 
             saveDataGridView.CurrentCell = null; // Reflect current state
-            string[] paths = ListFiles.GetSelectedSavePaths(saveDataGridView, settings.SaveFolder);
+            string[] sourcePaths = ListFiles.GetSelectedSavePaths(saveDataGridView, settings.SaveFolder);
 
-            if (paths.Length == 0) return;
+            if (sourcePaths.Length == 0) return;
+
+            string[] cachePaths = Cache.Create(sourcePaths);
 
             string date = DateTime.Now.ToString("yyyyMMddHHmmss");
             string includes = ListFiles.GetSaveIncludes(saveDataGridView);
 
-            Archiver.Compress(@$"{settings.BackupFolder}\{date}_{includes}.7z", paths);
+            Archiver.Compress(@$"{settings.BackupFolder}\{date}_{includes}.7z", cachePaths);
         }
 
         private void MoveCameraButton_Click(object sender, EventArgs e)
@@ -197,7 +202,7 @@ namespace NMSSaveDataUtil
 
         private void UpdateSaveGrid(System.Object source, System.IO.FileSystemEventArgs e)
         {
-            ListFiles.InitSaveGrid(saveDataGridView, settings);
+            ListFiles.ReloadSaveGrid(saveDataGridView, settings, lockButton.Checked);
         }
 
         private void SaveDataGridView_Paint(object sender, PaintEventArgs e)
@@ -259,6 +264,13 @@ namespace NMSSaveDataUtil
             if (e.RowIndex < 0) { return; }
 
             DataGridView dgv = (DataGridView)sender;
+
+            // Update checkbox
+            if (e.ColumnIndex == 0)
+            {
+                saveDataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                settings.BackupTargets = ListFiles.GetSelectedSaveFiles(saveDataGridView);
+            }
 
             if (e.ColumnIndex == 1)
             {

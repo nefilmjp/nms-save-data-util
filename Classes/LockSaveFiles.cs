@@ -4,7 +4,7 @@ namespace NMSSaveDataUtil.Classes
 {
     internal class LockSaveFiles
     {
-        private static bool IsReadonly(FileAttributes attributes)
+        public static bool IsReadonly(FileAttributes attributes)
         {
             if((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
             {
@@ -16,12 +16,12 @@ namespace NMSSaveDataUtil.Classes
             }
         }
 
-        private static FileAttributes AddAttribute(FileAttributes attributes, FileAttributes attributesToAdd)
+        public static FileAttributes AddAttribute(FileAttributes attributes, FileAttributes attributesToAdd)
         {
             return attributes | attributesToAdd;
         }
 
-        private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
+        public static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
         {
             return attributes & ~attributesToRemove;
         }
@@ -59,7 +59,7 @@ namespace NMSSaveDataUtil.Classes
                 if (ss.Mode == "lock")
                 {
                     Lockfile(@$"{settings.SaveFolder}\{ss.Filename}");
-                    Lockfile(@$"{settings.SaveFolder}\{ss.Filename}");
+                    Lockfile(@$"{settings.SaveFolder}\mf_{ss.Filename}");
                 }
             });
         }
