@@ -36,6 +36,7 @@ namespace NMSSaveDataUtil.Classes
             string[] selectedFilename = settings.BackupTargets;
 
             grid.Rows.Clear();
+            grid.SuspendLayout();
             string[] files = GetSaveFiles(path);
             foreach ((string file, int idx) in files.Select((x, i) => (x, i)))
             {
@@ -52,6 +53,7 @@ namespace NMSSaveDataUtil.Classes
             }
             grid.Sort(grid.Columns["saveFilenameColumn"], System.ComponentModel.ListSortDirection.Ascending);
             grid.CurrentCell = null;
+            grid.ResumeLayout();
         }
 
         public static string GetSaveIncludes(DataGridView grid)
@@ -103,7 +105,7 @@ namespace NMSSaveDataUtil.Classes
             return selectedFiles;
         }
 
-        public string[] GetSaveFilesByMode(DataGridView grid, string mode)
+        public static string[] GetSaveFilesByMode(DataGridView grid, string mode)
         {
             var rows = grid.Rows.Cast<DataGridViewRow>();
             string[] selectedFiles = rows
@@ -138,6 +140,7 @@ namespace NMSSaveDataUtil.Classes
         public static void InitBackupGrid(DataGridView grid, string path)
         {
             grid.Rows.Clear();
+            grid.SuspendLayout();
             string[] files = GetBackupFiles(path);
             foreach ((string file, int idx) in files.Select((x, i) => (x, i)))
             {
@@ -157,6 +160,7 @@ namespace NMSSaveDataUtil.Classes
             }
             grid.Sort(grid.Columns["backupDateColumn"], System.ComponentModel.ListSortDirection.Descending);
             grid.CurrentCell = null;
+            grid.ResumeLayout();
         }
 
         #endregion

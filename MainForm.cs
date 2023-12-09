@@ -67,7 +67,6 @@ namespace NMSSaveDataUtil
             }
         }
 
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (settings.WinSize.Width == 0 || settings.WinSize.Height == 0)
