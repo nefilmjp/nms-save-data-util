@@ -51,7 +51,8 @@ namespace NMSSaveDataUtil.Classes
                     grid.Rows[idx].Cells["saveSelectedColumn"].Value = true;
                 }
             }
-            grid.Sort(grid.Columns["saveFilenameColumn"], System.ComponentModel.ListSortDirection.Ascending);
+            // grid.Sort(grid.Columns["saveFilenameColumn"], System.ComponentModel.ListSortDirection.Ascending);
+            grid.Sort(new NaturalSortComparer("saveFilenameColumn"));
             grid.CurrentCell = null;
             grid.ResumeLayout();
         }
