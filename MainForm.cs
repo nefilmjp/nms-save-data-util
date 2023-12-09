@@ -69,6 +69,8 @@ namespace NMSSaveDataUtil
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Cache.CreateTempDir();
+
             if (settings.WinSize.Width == 0 || settings.WinSize.Height == 0)
             {
                 // Set default values if needed
@@ -125,6 +127,8 @@ namespace NMSSaveDataUtil
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Cache.DeleteTempDir();
+
             if (settings.SaveFolder != "") LockSaveFiles.Stop(settings);
 
             settings.SaveFolder = settings.SaveFolder;
@@ -174,14 +178,16 @@ namespace NMSSaveDataUtil
             if (settings.SaveFolder == "" || settings.BackupFolder == "") return;
 
             saveDataGridView.CurrentCell = null; // Reflect current state
-            string[] paths = ListFiles.GetSelectedSavePaths(saveDataGridView, settings.SaveFolder);
+            string[] sourcePaths = ListFiles.GetSelectedSavePaths(saveDataGridView, settings.SaveFolder);
 
-            if (paths.Length == 0) return;
+            if (sourcePaths.Length == 0) return;
+
+            string[] cachePaths = Cache.Create(sourcePaths);
 
             string date = DateTime.Now.ToString("yyyyMMddHHmmss");
             string includes = ListFiles.GetSaveIncludes(saveDataGridView);
 
-            Archiver.Compress(@$"{settings.BackupFolder}\{date}_{includes}.7z", paths);
+            Archiver.Compress(@$"{settings.BackupFolder}\{date}_{includes}.7z", cachePaths);
         }
 
         private void MoveCameraButton_Click(object sender, EventArgs e)
